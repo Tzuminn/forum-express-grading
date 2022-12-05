@@ -1,13 +1,18 @@
 <div class="row bg-white py-3 mb-3" style="box-shadow: 1px 1px 1px 1px #cccccc;">
   <div class="card col-4" style="border: 0;">
     <img src="{{#if userProfile.image}}{{ userProfile.image }}{{else}}https://avatars.githubusercontent.com/u/8667311?s=200&v=4{{/if}}" alt="avatar"
-      class="mx-auto"style="height: 300px; width: 300px; border-radius: 50%;">
+      class="mx-auto"style="height: 300px; width: 300px;">
   </div>
   <div class="col-8">
     <p class="text-secondary mb-1">
-      <h3>{{ user.name }}</h3>
-      <h6>{{ user.email }}</h6>
-      <h3>{{ comments.length }} 已評論餐廳</h3>
+      <h3>{{ userProfile.name }}</h3>
+      <br>
+      <h6>{{ userProfile.email }}</h6>
+      <br>
+      <strong>{{ comments.length }} 已評論餐廳</strong><br>
+      <strong>{{ userProfile.FavoritedRestaurants.length }} 收藏的餐廳</strong><br>
+      <strong>{{ userProfile.Followings.length }} followings(追蹤者)</strong><br>
+      <strong>{{ userProfile.Followers.length }} followers(追隨者)</strong>
     </p>
     {{#ifCond user.id userProfile.id}}
     <a href='/users/{{user.id}}/edit'>
@@ -17,19 +22,74 @@
   </div>
 </div>
 
-<div class="row bg-white mb-3" style="box-shadow: 1px 1px 1px 1px #cccccc;">
-  <div class="card col-12" style="height: 70px; border: 0.1; border-radius: 0%; background-color:#F8F8F8">
-    <h3 class="m-3 d-flex align-items-center">{{ comments.length }} 已評論餐廳</h3>
+<div class="row mt-5">
+  <div class="col-4 mx-auto">
+    <div class="bg-white mb-4" style="box-shadow: 1px 1px 1px 1px #cccccc;">
+      <div class="card col-12" style="height: 70px; border: 0.1; border-radius: 0%; background-color:#F8F8F8">
+        <h3 class="m-3 d-flex align-items-center">{{ userProfile.Followings.length }} followings (追蹤者)</h3>
+      </div>
+      <div class="col-12">
+        {{#if userProfile.Followings}}
+        {{#each userProfile.Followings}}
+        <a href="/users/{{this.id}}" style="text-decoration:none;">
+          <img src="{{#if this.image}}{{ this.image }}{{else}}https://avatars.githubusercontent.com/u/8667311?s=200&v=4{{/if}}" class="m-1" style="height: 70px; width: 70px;" alt="">
+        </a>
+        {{/each}}
+        {{else}}
+        <h5 class="m-3 d-flex align-items-center">目前無任何追蹤者</h5>
+        {{/if}}
+      </div>
+    </div>
+    <div class="bg-white mb-4" style="box-shadow: 1px 1px 1px 1px #cccccc;">
+      <div class="card col-12" style="height: 70px; border: 0.1; border-radius: 0%; background-color:#F8F8F8">
+        <h3 class="m-3 d-flex align-items-center">{{ userProfile.Followers.length }} followers (追隨者)</h3>
+      </div>
+      <div class="col-12">
+        {{#if userProfile.Followers}}
+        {{#each userProfile.Followers}}
+        <a href="/users/{{this.id}}" style="text-decoration:none;">
+          <img src="{{#if this.image}}{{ this.image }}{{else}}https://avatars.githubusercontent.com/u/8667311?s=200&v=4{{/if}}"
+            class="m-1" style="height: 70px; width: 70px;" alt="">
+        </a>
+        {{/each}}
+        {{else}}
+        <h5 class="m-3 d-flex align-items-center">目前無任何追隨者</h5>
+        {{/if}}
+      </div>
+    </div>
   </div>
-  <div class="col-12">
-    {{#if comments}}
-    {{#each comments}}
-    <a href="/restaurants/{{this.restaurantId}}" style="text-decoration:none;">
-      <img src="{{this.Restaurant.image}}" class="m-2" style="height: 150px; width: 150px;" alt="">
-    </a>
-    {{/each}}
-    {{else}}
-      <h5 class="m-3 d-flex align-items-center">目前無任何評論</h5>
-    {{/if}}
+  <div class="col-8 mx-auto">
+    <div class="bg-white mb-3" style="box-shadow: 1px 1px 1px 1px #cccccc;">
+      <div class="card col-12" style="height: 70px; border: 0.1; border-radius: 0%; background-color:#F8F8F8">
+        <h3 class="m-3 d-flex align-items-center">{{ comments.length }} 已評論餐廳</h3>
+      </div>
+      <div class="col-12">
+        {{#if comments}}
+        {{#each comments}}
+        <a href="/restaurants/{{this.restaurantId}}" style="text-decoration:none;">
+          <img src="{{this.Restaurant.image}}" class="m-1" style="height: 70px; width: 70px;" alt="">
+        </a>
+        {{/each}}
+        {{else}}
+        <h5 class="m-3 d-flex align-items-center">目前無任何評論</h5>
+        {{/if}}
+      </div>
+    </div>
+    <div class="bg-white mb-3" style="box-shadow: 1px 1px 1px 1px #cccccc;">
+      <div class="card col-12" style="height: 70px; border: 0.1; border-radius: 0%; background-color:#F8F8F8">
+        <h3 class="m-3 d-flex align-items-center">{{ userProfile.FavoritedRestaurants.length }} 收藏的餐廳</h3>
+      </div>
+      <div class="col-12">
+        {{#if userProfile.FavoritedRestaurants}}
+        {{#each userProfile.FavoritedRestaurants}}
+        <a href="/restaurants/{{this.id}}" style="text-decoration:none;">
+          <img src="{{this.image}}" class="m-1" style="height: 70px; width: 70px;" alt="">
+        </a>
+        {{/each}}
+        {{else}}
+        <h5 class="m-3 d-flex align-items-center">目前無收藏任何餐廳</h5>
+        {{/if}}
+      </div>
+    </div>
   </div>
 </div>

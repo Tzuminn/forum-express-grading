@@ -43,10 +43,19 @@ const userController = {
   },
   getUser: (req, res, next) => {
     return Promise.all([
-      User.findByPk(req.params.id, { raw: true }),
+      User.findByPk(req.params.id, {
+        include: [
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' },
+          { model: Restaurant, as: 'FavoritedRestaurants' }
+        ],
+        nest: true
+      }),
       Comment.findAll({
         where: { userId: req.params.id },
+        attributes: ['restaurantId'],
         include: Restaurant,
+        group: 'restaurantId',
         raw: true,
         nest: true
       })
@@ -56,7 +65,12 @@ const userController = {
 
         return res.render('users/profile', {
           user: getUser(req),
-          userProfile,
+          userProfile: {
+            ...userProfile.toJSON(),
+            isFollowed: getUser(req).Followings.some(
+              followingUser => followingUser.id === userProfile.id
+            )
+          },
           comments
         })
       })
